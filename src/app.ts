@@ -13,6 +13,12 @@ import routes from './routes';
 const app: Application = express();
 
 /**
+ * Fix for: ERR_ERL_UNEXPECTED_X_FORWARDED_FOR
+ * Trust the reverse proxy (Render/Load Balancer) so we can get the real user IP
+ */
+app.set('trust proxy', 1);
+
+/**
  * Security middleware
  */
 app.use(helmet()); // Set security headers
