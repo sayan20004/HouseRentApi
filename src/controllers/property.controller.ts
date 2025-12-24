@@ -38,7 +38,10 @@ export const getOwnerProperties = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        const properties = await Property.find({ owner: req.user!.userId }).sort({ createdAt: -1 });
+        // FIX 1: Added .populate() to return the full owner object instead of just ID
+        const properties = await Property.find({ owner: req.user!.userId })
+            .sort({ createdAt: -1 })
+            .populate('owner', 'name email phone');
 
         res.json(successResponse(properties));
     } catch (error) {
@@ -78,14 +81,14 @@ export const getProperties = async (
         if (area) filter['location.area'] = new RegExp(area as string, 'i');
         if (minRent || maxRent) {
             filter.rent = {};
-            if (minRent) filter.rent.$gte = minRent;
-            if (maxRent) filter.rent.$lte = maxRent;
+            if (minRent) filter.rent.$gte = Number(minRent);
+            if (maxRent) filter.rent.$lte = Number(maxRent);
         }
-        if (bhk) filter.bhk = bhk;
+        if (bhk) filter.bhk = Number(bhk);
         if (furnishing) filter.furnishing = furnishing;
         if (propertyType) filter.propertyType = propertyType;
         if (allowedTenants) filter.allowedTenants = allowedTenants;
-        if (petsAllowed !== undefined) filter.petsAllowed = petsAllowed;
+        if (petsAllowed !== undefined) filter.petsAllowed = petsAllowed === 'true';
 
         // Build sort query
         let sort: any = { createdAt: -1 }; // default: newest first
@@ -95,9 +98,9 @@ export const getProperties = async (
             sort = { rent: -1 };
         }
 
-        // Pagination
-        const pageNum = page || 1;
-        const limitNum = limit || 10;
+        // FIX 2: Explicitly cast page and limit to Numbers
+        const pageNum = Number(page) || 1;
+        const limitNum = Number(limit) || 10;
         const skip = (pageNum - 1) * limitNum;
 
         // Execute query
