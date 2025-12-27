@@ -1,8 +1,5 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
-/**
- * Property type enum
- */
 export enum PropertyType {
     APARTMENT = 'apartment',
     INDEPENDENT_HOUSE = 'independent_house',
@@ -11,18 +8,12 @@ export enum PropertyType {
     SHARED_FLAT = 'shared_flat',
 }
 
-/**
- * Furnishing enum
- */
 export enum Furnishing {
     UNFURNISHED = 'unfurnished',
     SEMI_FURNISHED = 'semi_furnished',
     FULLY_FURNISHED = 'fully_furnished',
 }
 
-/**
- * Allowed tenants enum
- */
 export enum AllowedTenants {
     FAMILY = 'family',
     BACHELORS = 'bachelors',
@@ -30,18 +21,12 @@ export enum AllowedTenants {
     ANY = 'any',
 }
 
-/**
- * Property status enum
- */
 export enum PropertyStatus {
     ACTIVE = 'active',
     PAUSED = 'paused',
     RENTED_OUT = 'rented_out',
 }
 
-/**
- * Location sub-schema interface
- */
 export interface ILocation {
     city: string;
     area: string;
@@ -53,9 +38,6 @@ export interface ILocation {
     };
 }
 
-/**
- * Property document interface
- */
 export interface IProperty extends Document {
     owner: mongoose.Types.ObjectId;
     title: string;
@@ -84,9 +66,6 @@ export interface IProperty extends Document {
     updatedAt: Date;
 }
 
-/**
- * Location schema
- */
 const locationSchema = new Schema<ILocation>(
     {
         city: {
@@ -124,9 +103,6 @@ const locationSchema = new Schema<ILocation>(
     { _id: false }
 );
 
-/**
- * Property schema
- */
 const propertySchema = new Schema<IProperty>(
     {
         owner: {
@@ -240,17 +216,12 @@ const propertySchema = new Schema<IProperty>(
     }
 );
 
-/**
- * Indexes for search optimization
- */
 propertySchema.index({ 'location.city': 1, 'location.area': 1 });
 propertySchema.index({ rent: 1 });
 propertySchema.index({ bhk: 1 });
 propertySchema.index({ propertyType: 1 });
 propertySchema.index({ status: 1 });
 propertySchema.index({ owner: 1 });
+propertySchema.index({ 'location.geo': '2dsphere' });
 
-/**
- * Property model
- */
 export const Property: Model<IProperty> = mongoose.model<IProperty>('Property', propertySchema);

@@ -1,9 +1,6 @@
 import { z } from 'zod';
 import { PropertyType, Furnishing, AllowedTenants } from '../models/Property';
 
-/**
- * Location validation schema
- */
 const locationSchema = z.object({
     city: z.string().min(1, 'City is required'),
     area: z.string().min(1, 'Area is required'),
@@ -17,17 +14,11 @@ const locationSchema = z.object({
         .optional(),
 });
 
-/**
- * Maintenance validation schema
- */
 const maintenanceSchema = z.object({
     amount: z.number().min(0, 'Maintenance amount cannot be negative').default(0),
     included: z.boolean().default(false),
 });
 
-/**
- * Create property validation schema
- */
 export const createPropertySchema = z.object({
     title: z.string().min(10, 'Title must be at least 10 characters').max(200),
     description: z.string().min(50, 'Description must be at least 50 characters').max(2000),
@@ -57,14 +48,8 @@ export const createPropertySchema = z.object({
     images: z.array(z.string().url('Each image must be a valid URL')).optional().default([]),
 });
 
-/**
- * Update property validation schema
- */
 export const updatePropertySchema = createPropertySchema.partial();
 
-/**
- * Property search/filter validation schema
- */
 export const searchPropertySchema = z.object({
     city: z.string().optional(),
     area: z.string().optional(),
@@ -88,11 +73,11 @@ export const searchPropertySchema = z.object({
     sortBy: z.enum(['newest', 'rent_low_to_high', 'rent_high_to_low']).optional().default('newest'),
     page: z.string().transform(Number).pipe(z.number().int().min(1)).optional().default('1'),
     limit: z.string().transform(Number).pipe(z.number().int().min(1).max(100)).optional().default('10'),
+    lat: z.string().transform(Number).pipe(z.number().min(-90).max(90)).optional(),
+    lng: z.string().transform(Number).pipe(z.number().min(-180).max(180)).optional(),
+    radius: z.string().transform(Number).pipe(z.number().min(0)).optional(),
 });
 
-/**
- * Property ID param validation schema
- */
 export const propertyIdSchema = z.object({
     id: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid property ID'),
 });
