@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { AnyZodObject, ZodError } from 'zod';
+import { ZodSchema, ZodError } from 'zod'; // Changed from AnyZodObject to ZodSchema
 
 /**
  * Validation target type
@@ -9,7 +9,7 @@ type ValidationTarget = 'body' | 'query' | 'params';
 /**
  * Generic validation middleware using Zod schemas
  */
-export const validate = (schema: AnyZodObject, target: ValidationTarget = 'body') => {
+export const validate = (schema: ZodSchema, target: ValidationTarget = 'body') => {
     return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const dataToValidate = req[target];

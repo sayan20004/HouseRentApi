@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { Conversation } from '../models/Conversation';
 import { Message } from '../models/Message';
-import { User } from '../models/User';
+// User import removed
 import { successResponse } from '../utils/ApiResponse';
 import { NotFoundError, BadRequestError, ForbiddenError } from '../utils/ApiError';
 import { AuthRequest } from '../middlewares/auth';
