@@ -4,12 +4,11 @@ import propertyRoutes from './property.routes';
 import visitRequestRoutes from './visitRequest.routes';
 import applicationRoutes from './application.routes';
 import favoriteRoutes from './favorite.routes';
+import chatRoutes from './chat.routes';
+import reviewRoutes from './review.routes';
 
 const router = Router();
 
-/**
- * Health check endpoint
- */
 router.get('/health', (_req: Request, res: Response) => {
     res.json({
         success: true,
@@ -18,14 +17,13 @@ router.get('/health', (_req: Request, res: Response) => {
     });
 });
 
-/**
- * API routes
- */
 router.use('/auth', authRoutes);
-router.use('/users', authRoutes); // User profile routes
-router.use('/', propertyRoutes); // Property routes
-router.use('/', visitRequestRoutes); // Visit request routes
-router.use('/', applicationRoutes); // Application routes
-router.use('/', favoriteRoutes); // Favorite routes
+router.use('/users', authRoutes);
+router.use('/', propertyRoutes);
+router.use('/', visitRequestRoutes);
+router.use('/', applicationRoutes);
+router.use('/', favoriteRoutes);
+router.use('/', chatRoutes);
+router.use('/', reviewRoutes);
 
 export default router;
