@@ -7,7 +7,7 @@ const storage = multer.memoryStorage();
 const upload = multer({
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
+  fileFilter: (_req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {
       cb(null, true);
     } else {
@@ -18,7 +18,7 @@ const upload = multer({
 
 export const uploadImages = upload.array('images', 5);
 
-export const handleImageUpload = async (req: Request, res: Response, next: NextFunction) => {
+export const handleImageUpload = async (req: Request, _res: Response, next: NextFunction) => {
   try {
     if (!req.files || (req.files as Express.Multer.File[]).length === 0) {
       return next();
